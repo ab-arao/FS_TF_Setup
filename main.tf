@@ -7,5 +7,5 @@ provider "aws" {
 module "s3" {
     source = "./S3"
     #bucket name should be unique
-    amiblocked_bucket_name = "amiblockedio"   
+    amiblocked_bucket_name = "amiblocked"   
 }
