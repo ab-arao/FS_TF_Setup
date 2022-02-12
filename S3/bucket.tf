@@ -18,10 +18,32 @@ resource "aws_s3_bucket_website_configuration" "amiblocked" {
   }
 }
 
+data "aws_canonical_user_id" "current" {}
+
 resource "aws_s3_bucket_acl" "amiblocked-logging" {
   bucket = aws_s3_bucket.amiblocked-logging.id
-  acl    = "${var.amiblocked_logging_acl_value}"
-}
+    access_control_policy {
+      grant {
+        grantee {
+          id   = data.aws_canonical_user_id.current.id
+          type = "CanonicalUser"
+        }
+        permission = "READ"
+      }
+
+      grant {
+        grantee {
+          type = "Group"
+          uri  = "http://acs.amazonaws.com/groups/s3/LogDelivery"
+        }
+        permission = "READ_ACP"
+      }
+
+      owner {
+        id = data.aws_canonical_user_id.current.id
+      }
+    }
+  }
 
 resource "aws_s3_bucket_acl" "amiblocked" {
   bucket = aws_s3_bucket.amiblocked.id
