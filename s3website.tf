@@ -22,7 +22,7 @@ EOF
     error_document = "error.html"
   }
 }
-
+/*
 resource "aws_s3_bucket_object" "object1" {
   for_each = fileset("website/", "*")
   bucket = aws_s3_bucket.b.id
@@ -30,6 +30,33 @@ resource "aws_s3_bucket_object" "object1" {
   source = "website/${each.value}"
   etag = filemd5("website/${each.value}")
   content_type = "text/html"
+}
+*/
+
+resource "aws_s3_bucket_object" "index" {
+  bucket = aws_s3_bucket.b.id
+
+  key = "index.html"
+
+  acl = "public-read"
+  source = "${path.module}/website/index.html" 
+
+  content_type = "text/html"
+
+  force_destroy = true
+} 
+
+resource "aws_s3_bucket_object" "error" {
+  bucket = aws_s3_bucket.b.id
+
+  key = "error.html"
+
+  acl = "public-read"
+  source = "${path.module}/website/error.html"
+
+  content_type = "text/html"
+
+  force_destroy = true
 }
 
 resource "aws_acm_certificate" "cert" {
@@ -153,16 +180,4 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     acm_certificate_arn = aws_acm_certificate.cert.arn
     ssl_support_method = "sni-only"
   }
-}
-
-resource "aws_route53_record" "record_a" {
-   zone_id = data.aws_route53_zone.zone.id
-   name    = "${var.root_domain_name}"
-   type    = "A"
-
-   alias {
-     name                   = replace(aws_cloudfront_distribution.s3_distribution.domain_name, "/[.]$/", "")
-     zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
-     evaluate_target_health = true
-   }
 }
