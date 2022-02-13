@@ -1,20 +1,8 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 3.0"
-    }
-  }
-}
-
 provider "aws" {
-    access_key = "${var.aws_root_access_key}"
-    secret_key = "${var.aws_root_secret_key}"
+    access_key = "${var.aws_access_key}"
+    secret_key = "${var.aws_secret_key}"
     region = "${var.region}"
 }
-
-data "aws_region" "current" {}
-data "aws_caller_identity" "current" {}
 
 // Create a variable for our domain name because we'll be using it a lot.
 variable "www_domain_name" {
@@ -27,13 +15,14 @@ variable "root_domain_name" {
 }
 
 module "ses-email-forwarding" {
-    source = "git@github.com:alemuro/terraform-ses-email-forwarding.git"
+    source = "git@github.com:superdug/terraform-aws-ses-email-forwarding.git"
 
     dns_provider     = "aws"
     domain           = "amiblocked.io"
-    s3_bucket        = "amiblocked.io.email"
+    s3_bucket        = "amiblocked.io.emails"
     s3_bucket_prefix = "emails"
+    mail_targets     = ["test@amiblocked.io", "administrator@amiblocked.io", "hostmaster@amiblocked.io", "postmaster@amiblocked.io", "webmaster@amiblocked.io", "admin@amiblocked.io"]
     mail_sender      = "postmaster@amiblocked.io"
-    mail_recipient   = "fluentstream@dugnet.com"
-    aws_region       = "us-west-1"
+    mail_recipient   = "fluentsteam@dugnet.com"
+    aws_region       = "${var.region}"
 }
