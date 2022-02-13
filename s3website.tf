@@ -22,16 +22,6 @@ EOF
     error_document = "error.html"
   }
 }
-/*
-resource "aws_s3_bucket_object" "object1" {
-  for_each = fileset("website/", "*")
-  bucket = aws_s3_bucket.b.id
-  key = each.value
-  source = "website/${each.value}"
-  etag = filemd5("website/${each.value}")
-  content_type = "text/html"
-}
-*/
 
 resource "aws_s3_bucket_object" "index" {
   bucket = aws_s3_bucket.b.id
