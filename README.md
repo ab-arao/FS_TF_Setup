@@ -27,3 +27,5 @@ The three main variables set in `variables.tf` are as follows:
 
 * `region` - sets the active AWS region
 * `root_domain_name` - sets the domain name root address
+
+Once those variables are set an S3 bucket to serve static websites out will be created.  The traffic will be encrypted using ACM https certificates and a cloudfront CDN will be created to serve the hosted webpage.
