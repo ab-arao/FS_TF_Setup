@@ -26,7 +26,7 @@ An email will be sent to the `mail_recepient` address from AWS to you for verify
 
 ## ACM, S3, Cloud Front CDN Setup
 
-The next step is to create a static website that hosts our frontend located in `/webpage` and uploaded files include `/webpage/index.html` and `/webpage/error.html`
+The next step is to create a static website that hosts our frontend located in `/website` and uploaded files include `/website/index.html` and `/website/error.html`
 
 The three main variables set in `variables.tf` are as follows:
 
