@@ -30,8 +30,8 @@ module "aurora-serverless" {
   source  = "git@github.com:superdug/terraform-aws-aurora-serverless.git"
   # insert the 4 required variables here
 
-  engine = "aurora-mysql"
-  engine_version = "5.7"
+  engine = "aurora-postgresql"
+  engine_version = "10.7"
   vpc_config = {
     azs              = slice(data.aws_availability_zones.current.names, 0, 3)
     cidr_block       = "10.0.0.0/16"
