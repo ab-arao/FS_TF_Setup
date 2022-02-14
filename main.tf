@@ -8,8 +8,8 @@ terraform {
 }
 
 provider "aws" {
-    access_key = "${var.aws_access_key}"
-    secret_key = "${var.aws_secret_key}"
+    access_key = "${var.aws_root_access_key}"
+    secret_key = "${var.aws_root_secret_key}"
     region = var.region
 }
 
@@ -24,4 +24,22 @@ module "ses-email-forwarding" {
     mail_sender      = "postmaster@amiblocked.io"
     mail_recipient   = "fs@dugnet.com"
     aws_region       = "${var.region}"
+}
+
+module "aurora-serverless" {
+  source  = "git@github.com:superdug/terraform-aws-aurora-serverless.git"
+  # insert the 4 required variables here
+
+  engine = "aurora-mysql"
+  engine_version = "5.7"
+  vpc_config = {
+    azs              = slice(data.aws_availability_zones.current.names, 0, 3)
+    cidr_block       = "10.0.0.0/16"
+    database_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  }
+  name = "amiblocked-api-db"
+}
+
+data "aws_availability_zones" "current" {
+  state = "available"
 }
