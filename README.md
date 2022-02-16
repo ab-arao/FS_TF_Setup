@@ -34,3 +34,33 @@ The three main variables set in `variables.tf` are as follows:
 * `root_domain_name` - sets the domain name root address
 
 Once those variables are set an S3 bucket to serve static websites out will be created.  The traffic will be encrypted using ACM https certificates and a cloudfront CDN will be created to serve the hosted webpage.
+
+## Serverless SQL Setup
+
+Now we need a database and want it to be serverless as well, so lets make a postgresql database on top of Amazon Auror ServerLess 
+
+The database module is stored here ( https://github.com/superdug/terraform-aws-aurora-serverless ) snd is invoked in the `main.cf` under the following definition
+
+```
+module "aurora-serverless" {
+  source  = "git@github.com:superdug/terraform-aws-aurora-serverless.git"
+  # insert the 4 required variables here
+
+  engine = "aurora-postgresql"
+  engine_version = "10.14"
+  vpc_config = {
+    azs              = slice(data.aws_availability_zones.current.names, 0, 3)
+    cidr_block       = "10.0.0.0/16"
+    database_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  }
+  name = "amiblocked-api-db-pgsql"
+  scaling_configuration = {
+    auto_pause               = false
+    max_capacity             = 16
+    min_capacity             = 2
+    seconds_until_auto_pause = 300
+    timeout_action           = "ForceApplyCapacityChange"
+  }
+}
+```
+
