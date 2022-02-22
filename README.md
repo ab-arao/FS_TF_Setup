@@ -37,6 +37,8 @@ Once those variables are set an S3 bucket to serve static websites out will be c
 
 ## Serverless SQL Setup DEFUNCT
 
+A design decision was made to use dynamodb instead for cost reasons
+
 Now we need a database and want it to be serverless as well, so lets make a postgresql database on top of Amazon Auror ServerLess 
 
 The database module is stored here ( https://github.com/superdug/terraform-aws-aurora-serverless ) snd is invoked in the `main.cf` under the following definition
