@@ -26,27 +26,6 @@ module "ses-email-forwarding" {
     aws_region       = "${var.region}"
 }
 
-module "aurora-serverless" {
-  source  = "git@github.com:superdug/terraform-aws-aurora-serverless.git"
-  # insert the 4 required variables here
-
-  engine = "aurora-postgresql"
-  engine_version = "10.14"
-  vpc_config = {
-    azs              = slice(data.aws_availability_zones.current.names, 0, 3)
-    cidr_block       = "10.0.0.0/16"
-    database_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  }
-  name = "amiblocked-api-db-pgsql"
-  scaling_configuration = {
-    auto_pause               = false
-    max_capacity             = 16
-    min_capacity             = 2
-    seconds_until_auto_pause = 300
-    timeout_action           = "ForceApplyCapacityChange"
-  }
-}
-
 data "aws_availability_zones" "current" {
   state = "available"
 }
