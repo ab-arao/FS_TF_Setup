@@ -35,7 +35,7 @@ The three main variables set in `variables.tf` are as follows:
 
 Once those variables are set an S3 bucket to serve static websites out will be created.  The traffic will be encrypted using ACM https certificates and a cloudfront CDN will be created to serve the hosted webpage.
 
-## Serverless SQL Setup
+## Serverless SQL Setup DEFUNCT
 
 Now we need a database and want it to be serverless as well, so lets make a postgresql database on top of Amazon Auror ServerLess 
 
